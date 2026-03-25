@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from .config import Settings
-from .geo import zoom_for_width_meters
+from .geo import meters_per_pixel, zoom_for_width_meters
 from .models import ImageSpec
 from .pipeline import PortDetectionPipeline
 from .scan_workflow import scan_port
@@ -128,6 +128,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=2.0,
         help="Sleep seconds after each tile detection",
     )
+    parser.add_argument(
+        "--preview-zoom-out-levels",
+        type=int,
+        default=0,
+        help="Zoom out N levels from the auto-fitted preview zoom for boundary preview image",
+    )
     parser.add_argument("--verbose", action="store_true", help="Print progress updates")
     return parser
 
@@ -176,7 +182,7 @@ def main() -> None:
     place = args.place
     lat = args.lat
     lng = args.lng
-    if args.meters is not None:
+    if args.meters is not None and zoom is None:
         pipeline = PortDetectionPipeline(Settings.from_env())
         center = pipeline.resolve_center(place=place, lat=lat, lng=lng)
         zoom = zoom_for_width_meters(
@@ -188,8 +194,20 @@ def main() -> None:
         place = None
         lat = center.lat
         lng = center.lng
+        if args.verbose:
+            approx_width = width * meters_per_pixel(center.lat, zoom)
+            print(
+                f"Auto zoom from --meters={args.meters}: zoom={zoom} "
+                f"(approx width={approx_width:.1f}m at lat={center.lat:.6f})"
+            )
+    elif args.meters is not None and zoom is not None and args.verbose:
+        print(
+            f"Using explicit --zoom={zoom}; --meters={args.meters} is not used for zoom calculation."
+        )
     if zoom is None:
         zoom = 17
+    if args.verbose:
+        print(f"Final scan image spec: {width}x{height}, zoom={zoom}, scale={args.scale}")
 
     result = scan_port(
         output_dir=args.output_dir,
@@ -210,6 +228,7 @@ def main() -> None:
         boundary_min_score=args.boundary_min_score,
         boundary_label_min_scores=args.boundary_label_min_scores,
         step_sleep_seconds=args.step_sleep_seconds,
+        preview_zoom_out_levels=args.preview_zoom_out_levels,
         verbose=args.verbose,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))

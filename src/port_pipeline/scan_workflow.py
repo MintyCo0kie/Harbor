@@ -66,6 +66,7 @@ def scan_port(
     boundary_min_score: float = 0.0,
     boundary_label_min_scores: dict[str, float] | None = None,
     step_sleep_seconds: float = 0.5,
+    preview_zoom_out_levels: int = 0,
     verbose: bool = False,
 ) -> dict:
     settings = Settings.from_env()
@@ -387,6 +388,7 @@ def scan_port(
         fallback_center=center,
         base_image_spec=image_spec,
         output_path=preview_path,
+        preview_zoom_out_levels=preview_zoom_out_levels,
         verbose=verbose,
     )
 
@@ -410,6 +412,7 @@ def scan_port(
             "boundary_min_score": boundary_min_score,
             "boundary_label_min_scores": per_label_thresholds,
             "step_sleep_seconds": step_sleep_seconds,
+            "preview_zoom_out_levels": preview_zoom_out_levels,
         },
         "tiles": [tile.to_dict() for tile in tiles],
         "detections": all_detections,
@@ -437,6 +440,7 @@ def draw_boundary_preview(
     fallback_center: Coordinate,
     base_image_spec: ImageSpec,
     output_path: Path,
+    preview_zoom_out_levels: int = 0,
     verbose: bool = False,
 ) -> tuple[Coordinate, ImageSpec]:
     preview_center, preview_spec = fit_preview_view(
@@ -444,6 +448,7 @@ def draw_boundary_preview(
         scan_zoom=scan_zoom,
         fallback_center=fallback_center,
         base_image_spec=base_image_spec,
+        preview_zoom_out_levels=preview_zoom_out_levels,
     )
     if verbose:
         print(
@@ -500,6 +505,7 @@ def fit_preview_view(
     scan_zoom: int,
     fallback_center: Coordinate,
     base_image_spec: ImageSpec,
+    preview_zoom_out_levels: int = 0,
 ) -> tuple[Coordinate, ImageSpec]:
     if not polygon_world:
         return fallback_center, base_image_spec
@@ -530,6 +536,16 @@ def fit_preview_view(
         chosen_zoom = zoom
         if span_x <= fit_width and span_y <= fit_height:
             break
+
+    if preview_zoom_out_levels > 0:
+        chosen_zoom = max(0, chosen_zoom - int(preview_zoom_out_levels))
+        zoom_factor = 2 ** (chosen_zoom - scan_zoom)
+        world_points = [(x * zoom_factor, y * zoom_factor) for x, y in points]
+        xs = [item[0] for item in world_points]
+        ys = [item[1] for item in world_points]
+        mid_x = (min(xs) + max(xs)) / 2.0
+        mid_y = (min(ys) + max(ys)) / 2.0
+        chosen_center = world_pixel_to_latlng(mid_x, mid_y, chosen_zoom)
 
     return chosen_center, ImageSpec(
         width=base_image_spec.width,

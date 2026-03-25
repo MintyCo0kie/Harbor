@@ -13,12 +13,31 @@ Create and activate a Conda environment first, then install dependencies with pi
 ```bash
 conda create -n harbor python=3.8 -y
 conda activate harbor
+cd harbor
 
 #windows
 pip install -r requirements.txt
 
 #Mac
+
+# macOS pip requirements for this project
+# Usage:
+#   python3 -m venv .venv
+#   source .venv/bin/activate
+#   pip install -U pip setuptools wheel
+#   pip install -r requirements-mac.txt
+
+
 pip install -r requirements-mac.txt
+
+
+# mmcv-full may not have a ready-made wheel on some macOS combinations.
+# Try this first:
+#   mim install "mmcv-full==1.7.2"
+# If it fails, fallback (limited ops support):
+#   mim install  "mmcv==1.7.2"
+
+
 ```
 
 ## 3. Detection Model download

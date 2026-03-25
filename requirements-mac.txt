@@ -80,7 +80,3 @@ mmengine==0.10.7
 #   mim install "mmcv-full==1.7.2"
 # If it fails, fallback (limited ops support):
 # mmcv==1.7.2   
-
-# Local project package
-# 已经注释掉下面这行以解决 "neither setup.py nor pyproject.toml found" 报错
-# -e ./mmrotate

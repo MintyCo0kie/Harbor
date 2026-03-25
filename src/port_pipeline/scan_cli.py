@@ -10,9 +10,9 @@ from .models import ImageSpec
 from .pipeline import PortDetectionPipeline
 from .scan_workflow import scan_port
 
-import os
-os.environ['http_proxy'] = 'http://127.0.0.1:7890'
-os.environ['https_proxy'] = 'http://127.0.0.1:7890'
+# import os
+# os.environ['http_proxy'] = 'http://127.0.0.1:7890'
+# os.environ['https_proxy'] = 'http://127.0.0.1:7890'
 
 
 LABEL_ALIASES = {

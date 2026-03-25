@@ -13,7 +13,12 @@ Create and activate a Conda environment first, then install dependencies with pi
 ```bash
 conda create -n harbor python=3.8 -y
 conda activate harbor
+
+#windows
 pip install -r requirements.txt
+
+#Mac
+pip install -r requirements-mac.txt
 ```
 
 ## 3. Detection Model download

@@ -1,0 +1,8 @@
+outputs_scan/
+outputs_scan_2000/
+outputs_scan_2000_4/
+outputs_scan_5000/
+.env.bak
+mmrotate\oriented_rcnn_r50_fpn_1x_dota_le90-6d2b2ce0.pth
+mmrotate\oriented_rcnn_r50_fpn_1x_dota_le90.py
+run.bat

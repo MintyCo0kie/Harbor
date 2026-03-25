@@ -16,6 +16,11 @@ conda activate harbor
 pip install -r requirements.txt
 ```
 
+## 3. Detection Model download
+```bash
+mim download mmrotate --config oriented_rcnn_r50_fpn_1x_dota_le90 --dest ./mmrotate
+```
+
 ## 3. API Key Setup (.env)
 
 Create a `.env` file in the project root and add one of the following keys:

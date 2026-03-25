@@ -60,5 +60,8 @@ GOOGLE_MAPS_API_KEY=your_api_key
 ## 4. Run Command
 
 ```bash
-python -m src.port_pipeline.scan_cli --place "singapore" --size 960x960 --meters 2000 --detector-format json --mmrotate-config mmrotate/oriented_rcnn_r50_fpn_1x_dota_le90.py --mmrotate-checkpoint mmrotate/oriented_rcnn_r50_fpn_1x_dota_le90-6d2b2ce0.pth --output-dir outputs_scan_2000 --verbose --max-no-new 4 --step-sleep-seconds 0.2
+python -m src.port_pipeline.scan_cli --place "singapore" --size 960x960 --meters 2000 --detector-format json --mmrotate-config mmrotate/oriented_rcnn_r50_fpn_1x_dota_le90.py --mmrotate-checkpoint mmrotate/oriented_rcnn_r50_fpn_1x_dota_le90-6d2b2ce0.pth --output-dir outputs_scan_2000 --verbose --max-no-new 4 --step-sleep-seconds 0.2 
+
+#if you use mac, please add, but it still may cause error cause mmrotate can not perfectly fit mps
+--mmrotate-device "mps"
 ```

@@ -22,20 +22,18 @@ pip install -r requirements.txt
 
 # macOS pip requirements for this project
 # Usage:
-#   python3 -m venv .venv
-#   source .venv/bin/activate
-#   pip install -U pip setuptools wheel
-#   pip install -r requirements-mac.txt
-
-
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip setuptools wheel
 pip install -r requirements-mac.txt
+
 
 
 # mmcv-full may not have a ready-made wheel on some macOS combinations.
 # Try this first:
-#   mim install "mmcv-full==1.7.2"
+mim install "mmcv-full==1.7.2"
 # If it fails, fallback (limited ops support):
-#   mim install  "mmcv==1.7.2"
+mim install  "mmcv==1.7.2"
 
 
 ```
